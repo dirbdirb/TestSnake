@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/CS4080-GO2/GoSnake/game"
+	"github.com/dirbdirb/TestSnake/game"
 )
 
 func main() {
