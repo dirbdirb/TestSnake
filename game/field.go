@@ -58,8 +58,6 @@ func (f *Field) Display() {
 	// Displaying food on the field
 	DrawFood(f.food)
 
-	DrawPowerUps(f.powerup)
-
 	// Display the score
 	DrawScore(f.points)
 
