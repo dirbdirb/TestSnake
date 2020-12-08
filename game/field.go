@@ -14,7 +14,6 @@ type Field struct {
 	obstacle Obstacle     // The obstacle
 	obsList  []Coordinate // List of all obstacles coordinates
 	powerup  PowerUp      // The powerup
-	powList  []Coordinate // List of all powerup coordinates
 	snake    Snake        // The object being controled
 	height   int          // Height of the field
 	width    int          // Width of the field
@@ -178,11 +177,11 @@ func (f *Field) move() {
 	if RuneSupport() {
 		if c == f.powerup.coord ||
 			((c.x == f.powerup.coord.x+1) && c.y == f.powerup.coord.y) {
-			f.ChangeColor()
+			f.replacePowerUp()
 		}
 	} else {
 		if c == f.food.coord {
-			f.ChangeColor()
+			f.replacePowerUp()
 		}
 	}
 
@@ -197,7 +196,27 @@ func (f *Field) AddPoint(point int, c Coordinate) {
 	f.PlaceFood()
 }
 
-func (f *Field) replacePowerUp(c Coordinate) {
+func (f *Field) replacePowerUp() {
+	sColor := SnakeColor
+	randColor := rand.Intn(6)
+
+	switch randColor {
+	case 0:
+		sColor = termbox.ColorRed
+	case 1:
+		sColor = termbox.ColorYellow
+	case 2:
+		sColor = termbox.ColorGreen
+	case 3:
+		sColor = termbox.ColorBlue
+	case 4:
+		sColor = termbox.ColorMagenta
+	case 5:
+		sColor = termbox.ColorCyan
+	default:
+		sColor = termbox.ColorDefault
+	}
+	_ = sColor
 	f.PlacePowerUp()
 }
 
@@ -234,7 +253,9 @@ func (f *Field) PlaceFood() {
 		if f.snake.AvailablePosition(randCoord) {
 			if f.points >= 500 {
 				if f.NotInObsPosition(randCoord) {
-					break
+					if randCoord != f.powerup.coord {
+						break
+					}
 				}
 			} else {
 				break
@@ -257,7 +278,7 @@ func (f *Field) PlaceObstacle() {
 
 		if f.snake.AvailablePosition(randCoord) {
 			if randCoord != f.food.coord {
-				if f.NotInPowPosition(randCoord) {
+				if randCoord != f.powerup.coord {
 					break
 				}
 			}
@@ -298,6 +319,11 @@ func DrawFood(f Food) {
 	// fmt.Println("food x:  ", f.coord.x)
 }
 
+func DrawPowerUps(f PowerUp) {
+	clr := termbox.ColorDefault
+	termbox.SetCell(f.coord.x, f.coord.y, f.char, clr, clr)
+}
+
 // Function to display the score
 func DrawScore(score int) {
 	msg := fmt.Sprintf("Score: %v", score)
@@ -318,32 +344,10 @@ func (f *Field) DrawObstacles() {
 	}
 }
 
-func (f *Field) DrawPowerUps() {
-	colr := termbox.ColorDefault
-	for i := 0; i < len(f.powList); i++ {
-		currCoord := f.powList[i]
-		termbox.SetCell(
-			currCoord.x,
-			currCoord.y,
-			f.powerup.char,
-			colr,
-			colr)
-	}
-}
-
 // Function used in food drops. Makes sure that food is not in obstacle
 func (f *Field) NotInObsPosition(c Coordinate) bool {
 	for i := 0; i < len(f.obsList); i++ {
 		if c == f.obsList[i] {
-			return false
-		}
-	}
-	return true
-}
-
-func (f *Field) NotInPowPosition(c Coordinate) bool {
-	for i := 0; i < len(f.powList); i++ {
-		if c == f.powList[i] {
 			return false
 		}
 	}
@@ -362,15 +366,6 @@ func (f *Field) HitObstacle(c Coordinate) bool {
 }
 
 // Check if the snake ate the powerup
-func (f *Field) HitPowerUp(c Coordinate) bool {
-	// Check all Coordinates of the powerups
-	for i := 0; i < len(f.powList); i++ {
-		if c == f.powList[i] {
-			return true
-		}
-	}
-	return false
-}
 
 func (f *Field) BonusRounds() {
 	if f.points >= pointCap {
@@ -381,7 +376,6 @@ func (f *Field) BonusRounds() {
 			f.PlaceObstacle()
 			f.PlacePowerUp()
 			f.obsList = append(f.obsList, f.obstacle.coord)
-			f.powList = append(f.powList, f.powerup.coord)
 		}
 
 		pointCap += 500
@@ -394,7 +388,7 @@ func (f *Field) BonusRounds() {
 	// Displaying the obstacles
 	f.DrawObstacles()
 
-	f.DrawPowerUps()
+	DrawPowerUps(f.powerup)
 
 	// Display New message informing player what is happening
 	if RuneSupport() {
@@ -404,9 +398,9 @@ func (f *Field) BonusRounds() {
 	}
 
 	if RuneSupport() {
-		DrawMsg(fieldWidth+5, 14, "Grab the rainbow to change color!")
+		DrawMsg(fieldWidth+5, fieldHeight/14, "Grab the rainbow to change color!")
 	} else {
-		DrawMsg(fieldWidth+5, 14, "Grab the ? to change color!")
+		DrawMsg(fieldWidth+5, fieldHeight/14, "Grab the ? to change color!")
 	}
 
 	// Once player reach 5000 points, make the game harder by
@@ -445,27 +439,4 @@ func (f *Field) DrawAchievements() {
 		GzMsg := "CONGRATULATION! All 3 hidden achievements were found!"
 		DrawMsg(fieldWidth+5, 6, GzMsg)
 	}
-}
-
-func (f *Field) ChangeColor() {
-	sColor := SnakeColor
-	randColor := rand.Intn(6)
-
-	switch randColor {
-	case 0:
-		sColor = termbox.ColorRed
-	case 1:
-		sColor = termbox.ColorYellow
-	case 2:
-		sColor = termbox.ColorGreen
-	case 3:
-		sColor = termbox.ColorBlue
-	case 4:
-		sColor = termbox.ColorMagenta
-	case 5:
-		sColor = termbox.ColorCyan
-	default:
-		sColor = termbox.ColorDefault
-	}
-	_ = sColor
 }
