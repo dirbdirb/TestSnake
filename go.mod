@@ -1,4 +1,4 @@
-module github.com/dirbdibr/TestSnake
+module github.com/dirbdirb/TestSnake
 
 go 1.15
 
