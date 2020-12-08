@@ -174,8 +174,16 @@ func (f *Field) move() {
 			}
 		}
 	}
-	if f.HitPowerUp(c) {
-		f.ChangeColor()
+
+	if RuneSupport() {
+		if c == f.powerup.coord ||
+			((c.x == f.powerup.coord.x+1) && c.y == f.powerup.coord.y) {
+			f.ChangeColor()
+		}
+	} else {
+		if c == f.food.coord {
+			f.ChangeColor()
+		}
 	}
 
 	f.SnakeExit()
@@ -187,6 +195,10 @@ func (f *Field) AddPoint(point int, c Coordinate) {
 	f.snake.length += 1
 	f.snake.body = append(f.snake.body, c)
 	f.PlaceFood()
+}
+
+func (f *Field) replacePowerUp(c Coordinate) {
+	f.PlacePowerUp()
 }
 
 // Function for when the snake leaves the field
