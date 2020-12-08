@@ -1,4 +1,4 @@
-module github.com/CS4080-GO2/GoSnake
+module github.com/dirbdibr/TestSnake
 
 go 1.15
 
