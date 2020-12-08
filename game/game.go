@@ -1,16 +1,15 @@
 package game
 
 import (
+	"fmt"
 	"os"
 	"time"
-	"fmt"
 
 	"github.com/nsf/termbox-go"
 )
 
-
 type Game struct {
-	field	Field
+	field Field
 }
 
 type Coordinate struct {
@@ -36,19 +35,19 @@ func StartGame() {
 	defer termbox.Close()
 
 	/*
-	   Order of events:
-	    1. Show intro screen.
-	    2. Get player input so we can decide to start game or whatnot.
-        3. Start game when player inputs start.
-        4. Show snake screen.
-        5. Render snake.
-        6. Start moving snake and randomly giving food.
-        7. Take player input for direction.
-		8. Check if player loses
+			   Order of events:
+			    1. Show intro screen.
+			    2. Get player input so we can decide to start game or whatnot.
+		        3. Start game when player inputs start.
+		        4. Show snake screen.
+		        5. Render snake.
+		        6. Start moving snake and randomly giving food.
+		        7. Take player input for direction.
+				8. Check if player loses
 	*/
 
-	game := Game {
-		field:	InitField(),
+	game := Game{
+		field: InitField(),
 	}
 
 	// Watch for player input.
@@ -127,7 +126,6 @@ func QuitGame() {
 	// Close program without error
 	os.Exit(0)
 }
-
 
 // Function for when the player lost
 func GameOver(reason string, score int) {
