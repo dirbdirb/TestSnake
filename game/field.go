@@ -72,6 +72,10 @@ func (f *Field) Display() {
 		f.BonusRounds()
 	}
 
+	if f.points >= 500 {
+		DrawPowerUps(f.powerup)
+	}
+
 	// Now display it
 	termbox.Flush()
 }
@@ -197,26 +201,6 @@ func (f *Field) AddPoint(point int, c Coordinate) {
 }
 
 func (f *Field) replacePowerUp() {
-	sColor := SnakeColor
-	randColor := rand.Intn(6)
-
-	switch randColor {
-	case 0:
-		sColor = termbox.ColorRed
-	case 1:
-		sColor = termbox.ColorYellow
-	case 2:
-		sColor = termbox.ColorGreen
-	case 3:
-		sColor = termbox.ColorBlue
-	case 4:
-		sColor = termbox.ColorMagenta
-	case 5:
-		sColor = termbox.ColorCyan
-	default:
-		sColor = termbox.ColorDefault
-	}
-	_ = sColor
 	f.PlacePowerUp()
 }
 
@@ -320,6 +304,27 @@ func DrawFood(f Food) {
 }
 
 func DrawPowerUps(f PowerUp) {
+	sColor := SnakeColor
+	randColor := rand.Intn(6)
+
+	switch randColor {
+	case 0:
+		sColor = termbox.ColorRed
+	case 1:
+		sColor = termbox.ColorYellow
+	case 2:
+		sColor = termbox.ColorGreen
+	case 3:
+		sColor = termbox.ColorBlue
+	case 4:
+		sColor = termbox.ColorMagenta
+	case 5:
+		sColor = termbox.ColorCyan
+	default:
+		sColor = termbox.ColorDefault
+	}
+	_ = sColor
+
 	clr := termbox.ColorDefault
 	termbox.SetCell(f.coord.x, f.coord.y, f.char, clr, clr)
 }
@@ -364,8 +369,6 @@ func (f *Field) HitObstacle(c Coordinate) bool {
 	}
 	return false
 }
-
-// Check if the snake ate the powerup
 
 func (f *Field) BonusRounds() {
 	if f.points >= pointCap {
@@ -438,26 +441,3 @@ func (f *Field) DrawAchievements() {
 		DrawMsg(fieldWidth+5, 6, GzMsg)
 	}
 }
-
-// func (f *Field) ChangeColor() {
-// 	sColor := SnakeColor
-// 	randColor := rand.Intn(6)
-
-// 	switch randColor {
-// 	case 0:
-// 		sColor = termbox.ColorRed
-// 	case 1:
-// 		sColor = termbox.ColorYellow
-// 	case 2:
-// 		sColor = termbox.ColorGreen
-// 	case 3:
-// 		sColor = termbox.ColorBlue
-// 	case 4:
-// 		sColor = termbox.ColorMagenta
-// 	case 5:
-// 		sColor = termbox.ColorCyan
-// 	default:
-// 		sColor = termbox.ColorDefault
-// 	}
-// 	_ = sColor
-// }
