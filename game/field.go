@@ -404,9 +404,9 @@ func (f *Field) BonusRounds() {
 	}
 
 	if RuneSupport() {
-		DrawMsg(fieldWidth+5, 10, "Grab the rainbow to change color!")
+		DrawMsg(fieldWidth+5, 14, "Grab the rainbow to change color!")
 	} else {
-		DrawMsg(fieldWidth+5, 10, "Grab the ? to change color!")
+		DrawMsg(fieldWidth+5, 14, "Grab the ? to change color!")
 	}
 
 	// Once player reach 5000 points, make the game harder by
