@@ -58,6 +58,8 @@ func (f *Field) Display() {
 	// Displaying food on the field
 	DrawFood(f.food)
 
+	DrawPowerUps(f.powerup)
+
 	// Display the score
 	DrawScore(f.points)
 
@@ -388,8 +390,6 @@ func (f *Field) BonusRounds() {
 	// Displaying the obstacles
 	f.DrawObstacles()
 
-	DrawPowerUps(f.powerup)
-
 	// Display New message informing player what is happening
 	if RuneSupport() {
 		DrawMsg(fieldWidth+5, fieldHeight/2, "AVOID THE BONES!!!")
@@ -440,3 +440,26 @@ func (f *Field) DrawAchievements() {
 		DrawMsg(fieldWidth+5, 6, GzMsg)
 	}
 }
+
+// func (f *Field) ChangeColor() {
+// 	sColor := SnakeColor
+// 	randColor := rand.Intn(6)
+
+// 	switch randColor {
+// 	case 0:
+// 		sColor = termbox.ColorRed
+// 	case 1:
+// 		sColor = termbox.ColorYellow
+// 	case 2:
+// 		sColor = termbox.ColorGreen
+// 	case 3:
+// 		sColor = termbox.ColorBlue
+// 	case 4:
+// 		sColor = termbox.ColorMagenta
+// 	case 5:
+// 		sColor = termbox.ColorCyan
+// 	default:
+// 		sColor = termbox.ColorDefault
+// 	}
+// 	_ = sColor
+// }
